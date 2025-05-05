@@ -5,8 +5,6 @@ from django.views import View
 from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.db.utils import IntegrityError
 
 from posts.models import Posts, Images, Categories
 

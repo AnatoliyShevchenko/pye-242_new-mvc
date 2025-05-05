@@ -109,7 +109,14 @@
 
                 </div>
                 <!-- Конец блока комментариев -->
-
+                    <div class="new-comment-form">
+                        <h4>Оставить комментарий</h4>
+                        <form action="{% url 'add_comment' post.id %}" method="post">
+                            {% csrf_token %}
+                            <textarea name="text" rows="4" placeholder="Ваш комментарий..." required></textarea>
+                            <button type="submit">Отправить</button>
+                        </form>
+                    </div>
             {% else %}
                 <p>Поста не существует</p>
             {% endif %}

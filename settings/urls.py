@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(route="", view=include("clients.urls")),
     path(route="", view=include("posts.urls")),
+    path(route="", view=include("comments.urls")),
 ]
 
 if settings.DEBUG:
