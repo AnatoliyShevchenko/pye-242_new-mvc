@@ -57,7 +57,7 @@ class Client(AbstractBaseUser, PermissionsMixin):
     )
     is_active = models.BooleanField(
         verbose_name="активный",
-        default=True,
+        default=False,
     )
     is_staff = models.BooleanField(
         verbose_name="сотрудник",
@@ -66,6 +66,12 @@ class Client(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(
         verbose_name="администратор",
         default=False,
+    )
+    activation_code = models.CharField(
+        verbose_name="код активации",
+        max_length=100,
+        blank=True,
+        null=True,
     )
     gender = models.CharField(
         verbose_name="пол",
