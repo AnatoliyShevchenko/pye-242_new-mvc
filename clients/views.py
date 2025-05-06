@@ -1,4 +1,5 @@
 import logging
+import os
 
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
@@ -9,6 +10,7 @@ from django.contrib import messages
 from django.db.utils import IntegrityError
 
 from clients.models import Client
+from clients.utils import send_email
 
 
 logger = logging.getLogger()
@@ -31,12 +33,21 @@ class RegistrationView(View):
             )
             return render(request=request, template_name="reg.html")
         try:
+            code = os.urandom(32).hex()
             Client.objects.create(
                 email=email, username=username,
-                password=make_password(raw_password)
+                password=make_password(raw_password),
+                activation_code=code
+            )
+            send_email(
+                template="account_activation.html", 
+                context={
+                    "username": username, 
+                    "code": f"http://127.0.0.1:8000/activation/{username}/{code}"},
+                to=email, title="Confirm your account"
             )
             messages.info(
-                request=request, message="Success Registration"
+                request=request, message="Check your email"
             )
             return render(
                 request=request, template_name="reg.html"
@@ -84,3 +95,18 @@ class LogoutView(View):
             return HttpResponse("Вы не авторизованы")
         logout(request=request)
         return redirect(to="base")
+
+
+class ActivationView(View):
+    def get(
+        self, request: HttpRequest, username: str, code: str
+    ) -> HttpResponse:
+        client = Client.objects.filter(
+            username=username,
+            activation_code=code
+        ).first()
+        if not client:
+            return HttpResponse(content="<h1>Ты кто?</h1>")
+        client.is_active = True
+        client.save(update_fields=["is_active"])
+        return redirect(to="login")
