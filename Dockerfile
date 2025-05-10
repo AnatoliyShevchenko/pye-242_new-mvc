@@ -2,19 +2,26 @@ FROM python:3.13.3-slim-bullseye
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends\
-    libpq-dev build-essential postgresql-client
+# Устанавливаем системные зависимости
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev build-essential postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN python -m venv venv
+# Создаём юзера
+RUN useradd -u 1001 -m django && \
+    mkdir -p /app && chown -R django:django /app
 
-ENV PATH="venv/bin:$PATH"
-
-ENV PYTHONBUFFERED 1
-
+# Копируем зависимости и устанавливаем от root
 COPY requirements.txt .
-
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Копируем остальное с правильными правами
+COPY --chown=django:django . .
 
+# Переключаемся на пользователя
+USER django
+
+# Готовим entrypoint
 RUN chmod +x /app/entrypoint.sh
+
+CMD ["/app/entrypoint.sh"]

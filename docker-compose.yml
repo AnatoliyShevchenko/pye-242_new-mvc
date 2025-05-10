@@ -15,7 +15,6 @@ services:
   web:
     build: .
     container_name: pye-mvc
-    entrypoint: [/app/entrypoint.sh]
     ports:
       - "8000:8000"
     depends_on:
@@ -24,13 +23,11 @@ services:
     networks:
       - pye
     volumes:
-    - pye-media:/app/mediafiles
-    - pye-static:/app/staticfiles
+    - ./mediafiles:/app/mediafiles
+    - ./staticfiles:/app/staticfiles
 
 networks:
   pye:
 
 volumes:
   pye-db-volume:
-  pye-media:
-  pye-static:
