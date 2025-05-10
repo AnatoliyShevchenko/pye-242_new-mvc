@@ -24,11 +24,13 @@ services:
     networks:
       - pye
     volumes:
-    - mediafiles:/app/mediafiles
-    - staticfiles:/app/staticfiles
+    - pye-media:/app/mediafiles
+    - pye-static:/app/staticfiles
 
 networks:
   pye:
 
 volumes:
   pye-db-volume:
+  pye-media:
+  pye-static:
