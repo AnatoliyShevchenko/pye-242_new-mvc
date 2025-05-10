@@ -8,8 +8,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Создаём юзера
-RUN useradd -u 1001 -m django && \
-    mkdir -p /app && chown -R django:django /app
+ARG HOST_UID=1000
+ARG HOST_GID=1000
+
+RUN groupadd -g $HOST_GID django && \
+    useradd -m -u $HOST_UID -g $HOST_GID django
 
 # Копируем зависимости и устанавливаем от root
 COPY requirements.txt .

@@ -3,6 +3,8 @@
 echo "Loading environment variables..."
 source .env
 
+mkdir -p /app/staticfiles /app/mediafiles
+
 echo "Waiting for PostgreSQL..."
 until pg_isready -h db -U $DB_USER; do
   echo "Waiting for database..."
