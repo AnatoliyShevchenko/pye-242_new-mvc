@@ -22,9 +22,9 @@ config = dotenv_values()
 SECRET_KEY = config.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = "clients.Client"
 # Application definition
@@ -75,8 +75,12 @@ ASGI_APPLICATION = "settings.asgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config.get("DB_NAME"),
+        "USER": config.get("DB_USER"),
+        "PASSWORD": config.get("DB_PASS"),
+        "HOST": config.get("DB_HOST"),
+        "PORT": config.get("DB_PORT"),
     }
 }
 
