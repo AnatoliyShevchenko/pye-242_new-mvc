@@ -22,7 +22,7 @@ config = dotenv_values()
 SECRET_KEY = config.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -75,12 +75,8 @@ ASGI_APPLICATION = "settings.asgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config.get("DB_NAME"),
-        "USER": config.get("DB_USER"),
-        "PASSWORD": config.get("DB_PASS"),
-        "HOST": config.get("DB_HOST"),
-        "PORT": config.get("DB_PORT"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3"
     }
 }
 
@@ -136,3 +132,10 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config.get("EMAIL_HOST_PASSWORD")
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOCKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = ["https://tests-pye.kz", "https://www.tests-pye.kz"]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

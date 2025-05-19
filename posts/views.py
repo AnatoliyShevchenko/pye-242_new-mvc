@@ -5,6 +5,7 @@ from django.views import View
 from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from posts.models import Posts, Images, Categories
 
@@ -60,7 +61,9 @@ class PostsView(View):
         return redirect(to="base")
 
 
-class ShowDeletePostView(View):
+class ShowDeletePostView(LoginRequiredMixin, View):
+    login_url = "login"
+    
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         try:
             post = Posts.objects.get(pk=pk)
@@ -90,14 +93,13 @@ class ShowDeletePostView(View):
         return redirect(to="base")
 
 
-class LikesView(View):
+class LikesView(LoginRequiredMixin, View):
+    login_url = "login"
+
     def post(
         self, request: HttpRequest, 
         pk: int, action: Literal["like", "dislike"]
     ):
-        client = request.user
-        if not client.is_active:
-            return
         try:
             post = Posts.objects.get(pk=pk)
         except Posts.DoesNotExist:
